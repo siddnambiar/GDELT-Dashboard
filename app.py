@@ -42,19 +42,28 @@ st.markdown(title_html, unsafe_allow_html=True)
 st.markdown("<h3 style='text-align: center;'>Discover how past events were portrayed in the news during specific months</h3>", unsafe_allow_html=True)
 
 st.markdown("""
-    <div style='text-align: center; font-size: 1.2em; margin-bottom: 20px;'>
-        Welcome to Global News Explorer! This app allows you to search and analyze news articles from around the world, providing insights and visual summaries. Note that since this is a prototype, it only allows you to go back until 2020. Feel free to use this app to explore how quirky, weird, and niche events were portrayed in the news at the time.
-        Simply enter a keyword, select a date range, and click 'Search Articles' to get a summary of recent news and a word cloud visualization.
-        Here are some fun, quirky keywords you could try: 'UFO sightings', 'unusual animal behavior', 'bizarre inventions', 'strange coincidences', 'mystery events'.
-    </div>
+        Welcome to Global News Explorer! Embark on a journey through global news archives and discover how events were reported around the world.
+
+        Please note that as this is a prototype, you can explore news articles from **2020 onwards**.
+
+        **To get started:**
+        1. **Enter a keyword**
+        2. **Select a date range**
+        3. **Click 'Search Articles'**
+
+        You'll receive insightful summaries and engaging word cloud visualizations.
+
+        **Happy exploring!**
 """, unsafe_allow_html=True)
+
+
 
 with st.container(border=True):
     st.header("🔍 Search Parameters")
     st.write("Use the filters below to specify your search criteria.")
 
     keyword = st.text_input(
-        "Keyword", "world news",
+        "Keyword", "US economy",
         help="Enter keywords to search for articles. Use quotes for exact phrases, 'OR' for alternatives, and '-' to exclude terms."
     )
 
