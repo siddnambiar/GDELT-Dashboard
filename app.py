@@ -148,10 +148,7 @@ filters = Filters(
 
 gd = GdeltDoc()
 
-with open('Data/api_key', 'r') as key_file:
-    api_key = key_file.readline().strip()
-
-genai.configure(api_key=api_key)
+genai.configure(api_key=st.secrets["api_key"])
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 with st.container(border=True):
