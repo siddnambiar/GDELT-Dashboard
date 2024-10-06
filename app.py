@@ -139,7 +139,7 @@ filters = Filters(
 
 gd = GdeltDoc()
 
-with open('api_key', 'r') as key_file:
+with open('Data/api_key', 'r') as key_file:
     api_key = key_file.readline().strip()
 
 genai.configure(api_key=api_key)
