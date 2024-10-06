@@ -153,58 +153,59 @@ with st.container(border=True):
         ])):
             articles = gd.article_search(filters)
             if not articles.empty:
-                articles_df = pd.DataFrame(articles)
+                with st.expander("## 🗝 Summary of Articles", expanded=False):
+                    articles_df = pd.DataFrame(articles)
 
-                if 'language' in articles_df.columns:
-                    articles_df = articles_df[articles_df['language'] == 'English']
+                    if 'language' in articles_df.columns:
+                        articles_df = articles_df[articles_df['language'] == 'English']
 
-                articles_list = []
-                for _, row in articles_df.iterrows():
-                    articles_list.append(f"Title: {row['title']}, URL: {row['url']}")
-                articles_text = "\n".join(articles_list)
+                    articles_list = []
+                    for _, row in articles_df.iterrows():
+                        articles_list.append(f"Title: {row['title']}, URL: {row['url']}")
+                    articles_text = "\n".join(articles_list)
 
-                prompt = (
-                    f"You are an expert news analyst. Provide an objective, concise summary of the most significant events related to '{keyword}' "
-                    f"during the period from {start_date} to {end_date}. Focus on recent developments with substantial impact. "
-                    "Organize the summary with clear headings for each major theme, and include specific details such as dates, names, statistics, "
-                    "and significant quotes to support each point. Write in a neutral, professional tone appropriate for a news summary. "
-                    "Exclude minor or unrelated topics to maintain focus. Your summary should be detailed and comprehensive, covering all major themes without a strict word limit.\n\n"
-                    "Here are the top articles:\n"
-                    f"{articles_text}"
-                )
+                    prompt = (
+                        f"You are an expert news analyst. Provide an objective, concise summary of the most significant events related to '{keyword}' "
+                        f"during the period from {start_date} to {end_date}. Focus on recent developments with substantial impact. "
+                        "Organize the summary with clear headings for each major theme, and include specific details such as dates, names, statistics, "
+                        "and significant quotes to support each point. Write in a neutral, professional tone appropriate for a news summary. "
+                        "Exclude minor or unrelated topics to maintain focus. Your summary should be detailed and comprehensive, covering all major themes without a strict word limit.\n\n"
+                        "Here are the top articles:\n"
+                        f"{articles_text}"
+                    )
 
-                try:
-                    response = model.generate_content(prompt)
-                    summary = response.text
-                except Exception as e:
-                    st.error("An error occurred during summarization.")
-                    summary = "Summary not available due to an error."
+                    try:
+                        response = model.generate_content(prompt)
+                        summary = response.text
+                    except Exception as e:
+                        st.error("An error occurred during summarization.")
+                        summary = "Summary not available due to an error."
 
-                st.markdown("## 🗝 Summary of Articles")
-                st.markdown(f"{summary}")
-
-                if 'title' in articles_df.columns:
-                    st.markdown("## ☁️ Word Cloud of Headlines")
-                    text = " ".join(title for title in articles_df['title'])
-                    stopwords = set(STOPWORDS)
-                    wordcloud = WordCloud(
-                        width=800, height=400,
-                        background_color='white',
-                        stopwords=stopwords,
-                        colormap='viridis',
-                        collocations=False
-                    ).generate(text)
-                    fig, ax = plt.subplots()
-                    ax.imshow(wordcloud, interpolation='bilinear')
-                    ax.axis("off")
-                    st.pyplot(fig)
+                    st.markdown(f"{summary}")
+                with st.expander("## ☁️ Word Cloud of Headlines", expanded=False):
+                    if 'title' in articles_df.columns:
+                        text = " ".join(title for title in articles_df['title'])
+                        stopwords = set(STOPWORDS)
+                        wordcloud = WordCloud(
+                            width=800, height=400,
+                            background_color='white',
+                            stopwords=stopwords,
+                            colormap='viridis',
+                            collocations=False
+                        ).generate(text)
+                        fig, ax = plt.subplots()
+                        ax.imshow(wordcloud, interpolation='bilinear')
+                        ax.axis("off")
+                        st.pyplot(fig)
             else:
                 st.warning("😕 No articles found for the given search parameters.")
 
-with st.expander("🤔 About Me"):
+with st.expander("🤔 About Me & The App"):
     st.markdown(
-        "Hi, I'm Sidd Nambiar! I'm passionate about Data Science and Science Communication. I built this toy prototype to explore the possibilities of using AI and data visualization to make sense of global events. I hope this app provides an engaging way to interact with the news!"
+        "Hi, I'm Sidd Nambiar! I'm passionate about Data Science and Science Communication. I built this toy prototype to explore the possibilities of using AI and data visualization to make sense of global events. I hope this app provides an engaging way to interact with the news!\n\n"
+        "**About the App:** This application is built using **Streamlit** for the web interface, **GDELT** for news data retrieval, **Google Generative AI** for summarization, and visualization tools like **Matplotlib** and **WordCloud** for data visualization. The tech stack showcases how powerful tools can be combined to create interactive and insightful applications."
     )
+
 
 st.markdown(f"""
     <footer style="text-align: center; padding: 20px; font-size: 0.9em; background: #F1F1F1; margin-top: 20px;">
