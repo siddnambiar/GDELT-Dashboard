@@ -100,7 +100,10 @@ with st.container(border=True):
     quarter = st.selectbox("Select Quarter (Optional)", quarters, index=0)
 
 st.markdown("### 🔎 Ready to Search?")
-search_button = st.button("Search Articles")
+search_button = st.button("Search Articles", disabled=len(keyword) < 5)
+
+if len(keyword) < 5:
+    st.warning("Please enter at least 5 characters for the keyword.")
 
 start_date = f"{year}-01-01"
 end_date = f"{year}-12-31"
