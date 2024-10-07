@@ -155,29 +155,30 @@ def get_start_date(lookback_period):
     return start_datetime, end_datetime
 
 def display_summary(model, keyword, start_date, end_date, articles_df):
-    with st.container():
-        st.markdown("<div class='container'><h3>🗑 Summary of Articles</h3></div>", unsafe_allow_html=True)
-        articles_list = [f"Title: {row['title']}, URL: {row['url']}" for _, row in articles_df.iterrows()]
-        articles_text = "\n".join(articles_list)
-    
-        prompt = (
-            f"Summarize significant events related to '{keyword}' from {start_date} to {end_date}."
-            f" Here are the top articles: {articles_text}"
-        )
-    
-        try:
-            response = model.generate_content(prompt)
-            summary = response.text
-        except Exception as e:
-            st.error("An error occurred during summarization.")
-            summary = "Summary not available due to an error."
-        
+
+    st.markdown("<div class='container'><h3>🗑 Summary of Articles</h3></div>", unsafe_allow_html=True)
+    articles_list = [f"Title: {row['title']}, URL: {row['url']}" for _, row in articles_df.iterrows()]
+    articles_text = "\n".join(articles_list)
+
+    prompt = (
+        f"Summarize significant events related to '{keyword}' from {start_date} to {end_date}."
+        f" Here are the top articles: {articles_text}"
+    )
+
+    try:
+        response = model.generate_content(prompt)
+        summary = response.text
+    except Exception as e:
+        st.error("An error occurred during summarization.")
+        summary = "Summary not available due to an error."
+    with st.container(border = True):
         st.markdown(f"<div class='summary'>{summary}</div>", unsafe_allow_html=True)
 
 
 def display_wordcloud(articles_df):
-    with st.container():
-        st.markdown("<div class='container'><h3>☁️ Word Cloud of Headlines</h3></div>", unsafe_allow_html=True)
+
+    st.markdown("<div class='container'><h3>☁️ Word Cloud of Headlines</h3></div>", unsafe_allow_html=True)
+    with st.container(border = True):
         if 'title' in articles_df.columns:
             wordcloud = generate_wordcloud(" ".join(articles_df['title']))
             fig, ax = plt.subplots()
@@ -198,8 +199,9 @@ def generate_wordcloud(text):
     return wordcloud
 
 def display_timeline(timeline_df):
-    with st.container():
-        st.markdown("<div class='container'><h3>📊 Timeline Chart</h3></div>", unsafe_allow_html=True)
+    
+    st.markdown("<div class='container'><h3>📊 Timeline Chart</h3></div>", unsafe_allow_html=True)
+    with st.container(border = True):
         if not timeline_df.empty:
             plt.figure(figsize=(10, 6))
             plt.plot(timeline_df['date'], timeline_df['moving_avg'], label='7-Day Moving Average', color='orange')
@@ -213,8 +215,9 @@ def display_timeline(timeline_df):
             st.pyplot(plt)
 
 def display_tone_chart(tone_df):
-    with st.container():
-        st.markdown("<div class='container'><h3>📉 Tone Chart</h3></div>", unsafe_allow_html=True)
+    
+    st.markdown("<div class='container'><h3>📉 Tone Chart</h3></div>", unsafe_allow_html=True)
+    with st.container(border = True):
         if not tone_df.empty:
             tone_df['bin'] = pd.to_numeric(tone_df['bin'])
             tone_df['count'] = pd.to_numeric(tone_df['count'])
@@ -228,8 +231,9 @@ def display_tone_chart(tone_df):
             st.pyplot(plt)
 
 def display_article_headlines(articles_df):
-    with st.container():
-        st.markdown("<div class='container'><h3>📰 Article Headlines</h3></div>", unsafe_allow_html=True)
+    
+    st.markdown("<div class='container'><h3>📰 Article Headlines</h3></div>", unsafe_allow_html=True)
+    with st.container(border = True):
         for index, row in articles_df.iterrows():
             st.markdown(f"[{row['title']}]({row['url']})", unsafe_allow_html=True)
 
