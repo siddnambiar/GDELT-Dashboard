@@ -130,11 +130,11 @@ def aggregate_gdelt_data(query, start_datetime, end_datetime, source_country, so
         timeline_df['value'] = pd.to_numeric(timeline_df['value'])
         timeline_df['moving_avg'] = timeline_df['value'].rolling(window=7).mean()
 
-    tone_data = query_gdelt_data(query, 'tonechart', start_datetime, end_datetime, source_country, source_lang)
+    tone_data = query_gdelt_data(query, 'tonechart', start_datetime, end_datetime, source_lang)
     if tone_data:
         tone_df = pd.DataFrame(tone_data['tonechart'])
 
-    articles_data = query_gdelt_data(query, 'artlist', start_datetime, end_datetime, source_country, source_lang)
+    articles_data = query_gdelt_data(query, 'artlist', start_datetime, end_datetime, source_lang)
     if articles_data:
         articles_df = pd.DataFrame(articles_data['articles'])
 
