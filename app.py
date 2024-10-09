@@ -17,7 +17,7 @@ def main():
     st.markdown("<h1>📰 Global News Explorer 🌍</h1>", unsafe_allow_html=True)
 
     with st.sidebar:
-        keyword, lookback_period, country_filter, limit_to_english = get_user_input()
+        keyword, lookback_period, limit_to_english = get_user_input()
         search_button = st.button("Search Articles")
 
     # Configure Generative AI API
@@ -31,8 +31,9 @@ def main():
             with st.spinner("Retrieving news articles, please wait..."):
                 start_datetime, end_datetime = get_start_date(lookback_period)
                 articles_df, timeline_df, tone_df = aggregate_gdelt_data(
-                    keyword, start_datetime, end_datetime, country_filter, limit_to_english
+                    keyword, start_datetime, end_datetime, None, limit_to_english
                 )
+
             
             if not articles_df.empty:
                 display_summary(model, keyword, start_datetime.strftime('%Y-%m-%d'), end_datetime.strftime('%Y-%m-%d'), articles_df)
@@ -91,34 +92,33 @@ def get_user_input():
     keyword = st.text_input("Enter Keyword", "Climate Change")
     lookback_options = ["1 week", "1 month", "3 months", "6 months", "1 year"]
     lookback_period = st.selectbox("Select Time Range", lookback_options, index=1)
-    country_filter = st.radio("Select Coverage", ("Limit to US", "Entire World"), index=1)
     limit_to_english = st.checkbox("Limit to English articles")
-    return keyword, lookback_period, country_filter, limit_to_english
+    return keyword, lookback_period, limit_to_english
 
-def query_gdelt_data(query, mode, start_datetime=None, end_datetime=None, source_country=None, source_lang=None):
+
+def query_gdelt_data(query, mode, start_datetime=None, end_datetime=None, source_lang=None):
     params = {
         'query': query,
         'mode': mode,
         'format': 'json',
         'maxrecords': 250
     }
-    
+
     if start_datetime:
         params['STARTDATETIME'] = start_datetime.strftime('%Y%m%d%H%M%S')
     if end_datetime:
         params['ENDDATETIME'] = end_datetime.strftime('%Y%m%d%H%M%S')
-    
-    if source_country:
-        params['sourcecountry'] = source_country
+
     if source_lang:
         params['sourcelang'] = source_lang
 
     response = requests.get(BASE_URL, params=params)
-    
+
     if response.status_code == 200:
         return response.json()
     else:
         return None
+
 
 def aggregate_gdelt_data(query, start_datetime, end_datetime, source_country, source_lang):
     articles_df, timeline_df, tone_df = pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
