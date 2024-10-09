@@ -123,7 +123,7 @@ def query_gdelt_data(query, mode, start_datetime=None, end_datetime=None, source
 def aggregate_gdelt_data(query, start_datetime, end_datetime, source_country, source_lang):
     articles_df, timeline_df, tone_df = pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
 
-    timeline_data = query_gdelt_data(query, 'timelinevol', start_datetime, end_datetime, source_country, source_lang)
+    timeline_data = query_gdelt_data(query, 'timelinevol', start_datetime, end_datetime, source_lang)
     if timeline_data:
         timeline_df = pd.DataFrame(timeline_data['timeline'][0]['data'])
         timeline_df['date'] = pd.to_datetime(timeline_df['date'])
