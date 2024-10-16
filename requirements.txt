@@ -4,3 +4,4 @@ pandas
 wordcloud
 matplotlib
 google-generativeai
+googletrans
